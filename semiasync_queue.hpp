@@ -47,10 +47,10 @@ namespace ds2i {
         void complete()
         {
             if (!m_next_thread.first.empty()) {
-                spawn_next_thread();
-                while (!m_running_threads.empty()) {
-                    commit_thread();
-                }
+                spawn_next_thread();                
+            }
+            while (!m_running_threads.empty()) {
+                commit_thread();
             }
         }
 
