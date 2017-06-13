@@ -9,15 +9,27 @@
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
+#ifdef _WINDOWS
+#include <time.h>
+#else
 #include <sys/time.h>
 #include <sys/resource.h>
+#endif
 
 #include "succinct/broadword.hpp"
 
+#ifdef _WINDOWS
+#define __builtin_expect(x,expect) x
+#define DS2I_LIKELY(x) x
+#define DS2I_UNLIKELY(x) x
+#define DS2I_NOINLINE 
+#define DS2I_ALWAYSINLINE 
+#else
 #define DS2I_LIKELY(x) __builtin_expect(!!(x), 1)
 #define DS2I_UNLIKELY(x) __builtin_expect(!!(x), 0)
 #define DS2I_NOINLINE __attribute__((noinline))
 #define DS2I_ALWAYSINLINE __attribute__((always_inline))
+#endif
 
 #if defined(__GNUC__) && !defined(__clang__)
 #    define DS2I_FLATTEN_FUNC __attribute__((always_inline,flatten))
@@ -48,6 +60,7 @@ namespace ds2i {
         return std::cerr << ": ";
     }
 
+#ifndef _WINDOWS
     inline double get_time_usecs() {
         timeval tv;
         gettimeofday(&tv, NULL);
@@ -59,6 +72,7 @@ namespace ds2i {
         getrusage(RUSAGE_SELF, &ru);
         return double(ru.ru_utime.tv_sec) * 1000000 + double(ru.ru_utime.tv_usec);
     }
+#endif
 
     // stolen from folly
     template <class T>

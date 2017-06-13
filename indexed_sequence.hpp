@@ -7,6 +7,11 @@
 #include "all_ones_sequence.hpp"
 #include "global_parameters.hpp"
 
+#ifdef _WINDOWS
+#define __builtin_expect(n) n
+#endif
+
+
 namespace ds2i {
 
     struct indexed_sequence {
